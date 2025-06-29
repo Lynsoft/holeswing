@@ -1,0 +1,76 @@
+{
+  "name": "golf-field-app",
+  "version": "1.0.0",
+  "main": "expo-router/entry",
+  "scripts": {
+    "start": "expo start --dev-client",
+    "ios": "expo run:ios",
+    "android": "expo run:android",
+    "build:dev": "eas build --profile development",
+    "build:preview": "eas build --profile preview",
+    "build:prod": "eas build --profile production",
+    "prebuild": "expo prebuild",
+    "lint": "pnpm run biome:check",
+    "format": "pnpm run biome:fix",
+    "web": "expo start --web",
+    "biome:check": "npx @biomejs/biome check .",
+    "biome:fix": "npx @biomejs/biome check --write .",
+    "biome:format": "npx @biomejs/biome format --write .",
+    "type-check": "tsc --noEmit",
+    "quality": "pnpm run type-check && pnpm run biome:check",
+    "quality:fix": "pnpm run biome:fix && pnpm run type-check",
+    "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
+    "changelog:first": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
+    "version": "npm run changelog && git add CHANGELOG.md",
+    "prepare": "husky"
+  },
+  "dependencies": {
+    "@expo/vector-icons": "^14.0.0",
+    "@react-native-async-storage/async-storage": "2.1.2",
+    "@react-navigation/bottom-tabs": "^7.0.5",
+    "@react-navigation/drawer": "^7.0.0",
+    "@react-navigation/native": "^7.0.3",
+    "@supabase/supabase-js": "^2.38.4",
+    "expo": "~53.0.13",
+    "expo-constants": "~17.1.4",
+    "expo-dev-client": "~5.2.2",
+    "expo-dev-launcher": "^5.0.17",
+    "expo-linking": "~7.1.4",
+    "expo-router": "~5.1.1",
+    "expo-status-bar": "~2.2.3",
+    "expo-system-ui": "~5.0.6",
+    "expo-web-browser": "~14.2.0",
+    "nativewind": "latest",
+    "react": "19.0.0",
+    "react-dom": "19.0.0",
+    "react-native": "0.79.4",
+    "react-native-gesture-handler": "~2.24.0",
+    "react-native-reanimated": "~3.17.4",
+    "react-native-safe-area-context": "5.4.0",
+    "react-native-screens": "~4.11.1",
+    "react-native-web": "^0.20.0",
+    "zustand": "^4.5.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0",
+    "@biomejs/biome": "^2.0.6",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
+    "@types/react": "~19.0.10",
+    "conventional-changelog-cli": "^5.0.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.2",
+    "tailwindcss": "^3.4.0",
+    "typescript": "~5.8.3"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx}": [
+      "npx @biomejs/biome check --write --no-errors-on-unmatched",
+      "npx @biomejs/biome format --write"
+    ],
+    "*.{json,md}": [
+      "npx @biomejs/biome format --write"
+    ]
+  },
+  "private": true
+}
