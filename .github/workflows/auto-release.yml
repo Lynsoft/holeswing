@@ -1,0 +1,141 @@
+name: Auto Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  check-for-release:
+    name: Check for Release
+    runs-on: ubuntu-latest
+    outputs:
+      should_release: ${{ steps.check.outputs.should_release }}
+      release_type: ${{ steps.check.outputs.release_type }}
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Check for release-worthy commits
+        id: check
+        run: |
+          # Get commits since last tag
+          LAST_TAG=$(git describe --tags --abbrev=0 2>/dev/null || echo "")
+          
+          if [ -z "$LAST_TAG" ]; then
+            echo "No previous tags found, will create initial release"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "release_type=minor" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Get commits since last tag
+          COMMITS=$(git log ${LAST_TAG}..HEAD --oneline)
+          
+          if [ -z "$COMMITS" ]; then
+            echo "No new commits since last release"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+            exit 0
+          fi
+          
+          # Check for breaking changes (major release)
+          if echo "$COMMITS" | grep -q "BREAKING CHANGE\|!:"; then
+            echo "Breaking changes detected, major release needed"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "release_type=major" >> $GITHUB_OUTPUT
+          # Check for features (minor release)
+          elif echo "$COMMITS" | grep -q "^[a-f0-9]* feat"; then
+            echo "New features detected, minor release needed"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "release_type=minor" >> $GITHUB_OUTPUT
+          # Check for fixes (patch release)
+          elif echo "$COMMITS" | grep -q "^[a-f0-9]* fix"; then
+            echo "Bug fixes detected, patch release needed"
+            echo "should_release=true" >> $GITHUB_OUTPUT
+            echo "release_type=patch" >> $GITHUB_OUTPUT
+          else
+            echo "No release-worthy commits found"
+            echo "should_release=false" >> $GITHUB_OUTPUT
+          fi
+
+  auto-release:
+    name: Auto Release
+    runs-on: ubuntu-latest
+    needs: check-for-release
+    if: needs.check-for-release.outputs.should_release == 'true'
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Run quality checks
+        run: pnpm run quality
+
+      - name: Configure Git
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+
+      - name: Run standard-version release
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          case "${{ needs.check-for-release.outputs.release_type }}" in
+            "major")
+              pnpm run standard-version:major
+              ;;
+            "minor")
+              pnpm run standard-version:minor
+              ;;
+            "patch")
+              pnpm run standard-version:patch
+              ;;
+            *)
+              pnpm run standard-version
+              ;;
+          esac
+
+      - name: Push changes
+        run: |
+          git push --follow-tags origin main
+
+      - name: Get new version
+        id: version
+        run: |
+          VERSION=$(git describe --tags --abbrev=0)
+          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.version.outputs.VERSION }}
+          release_name: Release ${{ steps.version.outputs.VERSION }}
+          body: |
+            Automated release based on conventional commits.
+            
+            See [CHANGELOG.md](./CHANGELOG.md) for detailed changes.
+          draft: false
+          prerelease: false

@@ -49,6 +49,17 @@ pnpm start
 - `pnpm build:preview` - Build preview version
 - `pnpm build:prod` - Build production version
 
+### Release Management
+
+- `pnpm release` - Interactive release with release-it
+- `pnpm release:patch` - Patch release (1.0.0 → 1.0.1)
+- `pnpm release:minor` - Minor release (1.0.0 → 1.1.0)
+- `pnpm release:major` - Major release (1.0.0 → 2.0.0)
+- `pnpm release:dry` - Preview release changes
+- `pnpm standard-version` - Automated release based on commits
+
+See [RELEASE.md](./RELEASE.md) for detailed release management guide.
+
 ## 🛠️ Development Workflow
 
 This project uses a comprehensive development workflow with automated code quality enforcement:

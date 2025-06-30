@@ -23,12 +23,16 @@ This document summarizes the complete development workflow that has been configu
 - **Commit-msg hook**: Validates conventional commit message format
 - **Configuration**: Optimized for fast execution with staged file processing
 
-### 3. Automated Changelog Generation
-- **Installed**: `@commitlint/cli`, `@commitlint/config-conventional`, `conventional-changelog-cli`
+### 3. Automated Changelog Generation & Release Management
+- **Installed**: `@commitlint/cli`, `@commitlint/config-conventional`, `conventional-changelog-cli`, `release-it`, `standard-version`
 - **Commit validation**: Enforces conventional commit format
 - **Changelog generation**: Automatic based on commit messages
-- **Configuration**: `commitlint.config.js` with comprehensive type definitions
-- **Scripts**: `changelog`, `changelog:first`, `version` for release management
+- **Release tools**: Multiple options for different workflows
+  - `release-it`: Interactive releases with GitHub integration
+  - `standard-version`: Automated releases based on conventional commits
+  - GitHub Actions: Automated and manual release workflows
+- **Configuration**: `commitlint.config.js`, `.release-it.json`, `.versionrc.json`
+- **Scripts**: Comprehensive release management commands
 
 ### 4. GitHub Actions CI/CD
 - **CI Workflow** (`.github/workflows/ci.yml`):
@@ -40,10 +44,18 @@ This document summarizes the complete development workflow that has been configu
   - Artifact upload for web builds
 
 - **Release Workflow** (`.github/workflows/release.yml`):
-  - Triggered on version tags
+  - Triggered on version tags or manual dispatch
+  - Quality checks before release
   - Automatic changelog generation
-  - GitHub release creation
+  - GitHub release creation with release notes
   - Build and optional deployment to GitHub Pages
+  - Support for manual releases with version selection
+
+- **Auto Release Workflow** (`.github/workflows/auto-release.yml`):
+  - Triggered on pushes to main branch
+  - Analyzes commits for release-worthy changes
+  - Automatically creates releases based on conventional commits
+  - Supports major, minor, and patch releases
 
 - **Dependabot Integration**:
   - Weekly dependency updates
@@ -73,8 +85,12 @@ This document summarizes the complete development workflow that has been configu
 - `.husky/commit-msg` - Commit message validation hook
 - `.github/workflows/ci.yml` - CI workflow
 - `.github/workflows/release.yml` - Release workflow
+- `.github/workflows/auto-release.yml` - Automated release workflow
 - `.github/workflows/dependabot-auto-merge.yml` - Dependabot automation
 - `.github/dependabot.yml` - Dependabot configuration
+- `.release-it.json` - Release-it configuration
+- `.versionrc.json` - Standard-version configuration
+- `RELEASE.md` - Comprehensive release management guide
 
 ### Modified Files
 - `package.json` - Updated scripts and lint-staged configuration, removed ESLint/Prettier dependencies
@@ -125,9 +141,19 @@ git commit -m "feat: add new feature"
 
 ### Release Process
 ```bash
-# Update version and generate changelog
-npm version patch  # or minor/major
-git push origin main --tags
+# Interactive release (recommended)
+pnpm run release
+
+# Automated release based on commits
+pnpm run standard-version
+
+# Specific version releases
+pnpm run release:patch    # 1.0.0 → 1.0.1
+pnpm run release:minor    # 1.0.0 → 1.1.0
+pnpm run release:major    # 1.0.0 → 2.0.0
+
+# Preview changes
+pnpm run release:dry
 ```
 
 ### Quality Checks
