@@ -1,0 +1,75 @@
+# CODEOWNERS file for LynSoft Golf Field Expo React Native App
+# 
+# This file defines who is responsible for reviewing changes to specific parts of the codebase.
+# When a pull request is created, GitHub will automatically request reviews from the appropriate code owners.
+#
+# Syntax: path/pattern @username @team-name
+# 
+# More specific patterns override less specific ones.
+# The last matching pattern takes precedence.
+
+# Global fallback - all files require review from project maintainers
+* @aiherrera
+
+# Root configuration files - require DevOps/Lead review
+package.json @aiherrera
+pnpm-lock.yaml @aiherrera
+tsconfig.json @aiherrera
+biome.json @aiherrera
+tailwind.config.js @aiherrera
+metro.config.js @aiherrera
+babel.config.js @aiherrera
+
+# Expo configuration - require mobile lead review
+app.json @aiherrera
+eas.json @aiherrera
+expo-env.d.ts @aiherrera
+nativewind-env.d.ts @aiherrera
+
+# GitHub workflows and settings - require DevOps review
+.github/ @aiherrera
+.husky/ @aiherrera
+
+# Documentation - require project lead review
+*.md @aiherrera
+CHANGELOG.md @aiherrera
+README.md @aiherrera
+
+# Mobile app structure - require mobile team review
+app/ @aiherrera
+components/ @aiherrera
+
+# Core mobile screens and navigation
+app/_layout.tsx @aiherrera
+app/(drawer)/ @aiherrera
+app/(tabs)/ @aiherrera
+
+# UI Components - require frontend team review
+components/ui/ @aiherrera
+components/forms/ @aiherrera
+
+# Business logic and utilities - require backend team review
+utils/ @aiherrera
+store/ @aiherrera
+types/ @aiherrera
+
+# Database and API integration
+utils/supabase.ts @aiherrera
+
+# Mobile assets - require design team review
+assets/ @aiherrera
+
+# Styling and theme files
+global.css @aiherrera
+components/**/*.tsx @aiherrera
+
+# Git hooks and commit configuration
+commitlint.config.js @aiherrera
+.gitignore @aiherrera
+
+# Release and versioning
+RELEASE.md @aiherrera
+DEVELOPMENT_WORKFLOW.md @aiherrera
+
+# Environment and deployment
+.env* @aiherrera

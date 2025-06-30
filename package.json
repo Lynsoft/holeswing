@@ -82,10 +82,10 @@
   "lint-staged": {
     "*.{js,jsx,ts,tsx}": [
       "npx @biomejs/biome check --write --no-errors-on-unmatched",
-      "npx @biomejs/biome format --write"
+      "npx @biomejs/biome format --write --no-errors-on-unmatched"
     ],
     "*.{json,md}": [
-      "npx @biomejs/biome format --write"
+      "npx @biomejs/biome format --write --no-errors-on-unmatched"
     ]
   },
   "private": true
