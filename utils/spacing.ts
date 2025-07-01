@@ -12,7 +12,6 @@ import type {
   SpacingScale,
   SpacingScaleTokens,
   SpacingSystem,
-  SpacingToken,
   SpacingValue,
 } from '~/types/spacing'
 

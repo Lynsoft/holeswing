@@ -21,10 +21,10 @@ function ExampleCard({ title, description, icon, route, color }: ExampleCardProp
   return (
     <TouchableOpacity
       className="bg-surface border border-border rounded-lg p-4 mb-4"
-      onPress={() => router.push(route as any)}>
+      onPress={() => router.push(route as never)}>
       <View className="flex-row items-start gap-4">
         <View className={`w-12 h-12 rounded-lg items-center justify-center bg-${color}/10`}>
-          <Icon name={icon as any} size="lg" color={color} />
+          <Icon name={icon as never} size="lg" color={color} />
         </View>
         <View className="flex-1">
           <Text className="text-lg font-semibold text-foreground mb-1">{title}</Text>

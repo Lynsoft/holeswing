@@ -87,7 +87,7 @@ export function useIcons() {
 
     // Try to resolve from color system
     try {
-      return getColorValue(color as any)
+      return getColorValue(color as never)
     } catch {
       // Fallback to the color string itself
       return color

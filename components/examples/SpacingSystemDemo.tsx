@@ -62,7 +62,12 @@ function SpacingSwatch({ spacingName, value, label, description, usage }: Spacin
 function SpacingScaleSection() {
   const { getValue } = useSpacing()
 
-  const spacingItems = [
+  const spacingItems: Array<{
+    key: SpacingScale
+    label: string
+    description: string
+    usage: readonly string[]
+  }> = [
     {
       key: '0',
       label: 'None',
@@ -165,7 +170,7 @@ function SpacingScaleSection() {
     <View className="mb-6">
       <Text className="text-2xl font-bold mb-4 text-foreground">Spacing Scale (8px Grid)</Text>
       {spacingItems.map((item) => {
-        const value = getValue(item.key as any)
+        const value = getValue(item.key)
         return (
           <SpacingSwatch
             key={item.key}
@@ -184,7 +189,12 @@ function SpacingScaleSection() {
 function SemanticSpacingSection() {
   const { getValue } = useSpacing()
 
-  const semanticItems = [
+  const semanticItems: Array<{
+    key: SemanticSpacing
+    label: string
+    description: string
+    usage: readonly string[]
+  }> = [
     {
       key: 'none',
       label: 'None',
@@ -245,7 +255,7 @@ function SemanticSpacingSection() {
     <View className="mb-6">
       <Text className="text-2xl font-bold mb-4 text-foreground">Semantic Spacing</Text>
       {semanticItems.map((item) => {
-        const value = getValue(item.key as any)
+        const value = getValue(item.key)
         return (
           <SpacingSwatch
             key={item.key}

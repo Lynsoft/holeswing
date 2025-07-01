@@ -276,7 +276,7 @@ export function typographyTokenToStyle(token: TypographyToken) {
       typeof token.lineHeight === 'number'
         ? token.lineHeight * token.fontSize
         : Number(token.lineHeight) * token.fontSize,
-    letterSpacing: 
+    letterSpacing:
       typeof token.letterSpacing === 'string'
         ? token.letterSpacing // Preserve valid string values
         : token.letterSpacing || 0,
