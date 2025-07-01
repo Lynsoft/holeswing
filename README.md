@@ -38,10 +38,11 @@ pnpm start
 ### Code Quality
 
 - `pnpm lint` - Check code quality with Biome
+- `pnpm lint:fix` - Fix linting issues with Biome
 - `pnpm format` - Format code with Biome
 - `pnpm type-check` - Run TypeScript type checking
-- `pnpm quality` - Run all quality checks
-- `pnpm quality:fix` - Fix formatting and linting issues
+- `pnpm quality` - Run all quality checks (type-check + lint)
+- `pnpm quality:fix` - Fix linting issues and run type check
 
 ### Building
 

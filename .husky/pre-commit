@@ -1,1 +1,22 @@
-npx lint-staged
+# LynSoft Next.js Starter - Pre-commit Hook
+# Runs mandatory development workflow to ensure code quality
+
+echo "🔍 Running pre-commit quality checks..."
+
+# Step 1: Lint and fix code with Biome
+echo "🔍 Linting and fixing code..."
+pnpm run lint:fix
+if [ $? -ne 0 ]; then
+  echo "❌ Linting failed. Please fix linting issues."
+  exit 1
+fi
+
+# Step 2: Type check TypeScript compilation
+echo "🔍 Type checking..."
+pnpm run type-check
+if [ $? -ne 0 ]; then
+  echo "❌ Type check failed. Please fix TypeScript compilation errors."
+  exit 1
+fi
+
+echo "✅ All pre-commit checks passed!"

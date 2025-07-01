@@ -10,15 +10,13 @@
     "build:preview": "eas build --profile preview",
     "build:prod": "eas build --profile production",
     "prebuild": "expo prebuild",
-    "lint": "pnpm run biome:check",
-    "format": "pnpm run biome:fix",
+    "lint": "npx @biomejs/biome check .",
+    "lint:fix": "npx @biomejs/biome check --write .",
+    "format": "npx @biomejs/biome format --write .",
     "web": "expo start --web",
-    "biome:check": "npx @biomejs/biome check .",
-    "biome:fix": "npx @biomejs/biome check --write .",
-    "biome:format": "npx @biomejs/biome format --write .",
     "type-check": "tsc --noEmit",
-    "quality": "pnpm run type-check && pnpm run biome:check",
-    "quality:fix": "pnpm run biome:fix && pnpm run type-check",
+    "quality": "pnpm run type-check && pnpm run lint",
+    "quality:fix": "pnpm run lint:fix && pnpm run type-check",
     "changelog": "conventional-changelog -p angular -i CHANGELOG.md -s",
     "changelog:first": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0",
     "version": "npm run changelog && git add CHANGELOG.md",
@@ -56,13 +54,13 @@
     "nativewind": "latest",
     "react": "19.0.0",
     "react-dom": "19.0.0",
-    "react-native": "0.79.4",
-    "react-native-gesture-handler": "~2.24.0",
-    "react-native-reanimated": "~3.17.4",
+    "react-native": "0.80.1",
+    "react-native-gesture-handler": "2.27.1",
+    "react-native-reanimated": "3.18.0",
     "react-native-safe-area-context": "5.4.0",
     "react-native-screens": "~4.11.1",
     "react-native-web": "^0.20.0",
-    "zustand": "^4.5.1"
+    "zustand": "5.0.6"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0",
@@ -70,7 +68,7 @@
     "@commitlint/cli": "^19.8.1",
     "@commitlint/config-conventional": "^19.8.1",
     "@release-it/conventional-changelog": "^10.0.1",
-    "@types/react": "~19.0.10",
+    "@types/react": "19.1.8",
     "conventional-changelog-cli": "^5.0.0",
     "husky": "^9.1.7",
     "lint-staged": "^16.1.2",
@@ -80,12 +78,8 @@
     "typescript": "~5.8.3"
   },
   "lint-staged": {
-    "*.{js,jsx,ts,tsx}": [
-      "npx @biomejs/biome check --write --no-errors-on-unmatched",
-      "npx @biomejs/biome format --write"
-    ],
-    "*.{json,md}": [
-      "npx @biomejs/biome format --write"
+    "*.{js,jsx,ts,tsx,json,md}": [
+      "npx @biomejs/biome check --write --no-errors-on-unmatched"
     ]
   },
   "private": true

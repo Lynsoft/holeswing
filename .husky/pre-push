@@ -1,8 +1,5 @@
-# Run type checking
-npx tsc --noEmit
-
-# Run full linting and formatting check
-npx @biomejs/biome check .
+# Run quality checks (type checking + linting)
+pnpm run quality
 
 # Run tests if they exist
 if [ -f "package.json" ] && grep -q '"test"' package.json; then

@@ -6,16 +6,24 @@ on:
   pull_request:
     branches: [main, develop]
 
+# Cancel in-progress runs for the same workflow and branch
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint-and-format:
-    name: Lint and Format
+  quality-check:
+    name: Quality Check
     runs-on: ubuntu-latest
+    timeout-minutes: 10
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
@@ -29,11 +37,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Run Biome check
-        run: pnpm run biome:check
+      - name: Type check
+        run: pnpm run type-check
 
-      - name: Check TypeScript
-        run: npx tsc --noEmit
+      - name: Lint and format check
+        run: pnpm run lint
 
   test:
     name: Test
@@ -68,13 +76,14 @@ jobs:
   build:
     name: Build
     runs-on: ubuntu-latest
-    needs: [lint-and-format, test]
+    needs: [quality-check, test]
+    timeout-minutes: 15
 
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Install pnpm
+      - name: Setup pnpm
         uses: pnpm/action-setup@v4
         with:
           version: 9
@@ -89,16 +98,44 @@ jobs:
         run: pnpm install --frozen-lockfile
 
       - name: Setup Expo CLI
-        run: npm install -g @expo/cli
+        run: pnpm add -g @expo/cli
 
-      - name: Prebuild
+      - name: Expo prebuild (dry run)
         run: npx expo prebuild --platform all --no-install
+        env:
+          EXPO_NO_TELEMETRY: 1
 
       - name: Build for web
         run: npx expo export --platform web
+        env:
+          EXPO_NO_TELEMETRY: 1
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
           name: web-build
           path: dist/
+
+  # Summary job that depends on all other jobs
+  ci-success:
+    name: CI Success
+    runs-on: ubuntu-latest
+    needs: [quality-check, test, build]
+    if: always()
+
+    steps:
+      - name: Check all jobs status
+        run: |
+          if [[ "${{ needs.quality-check.result }}" != "success" ]]; then
+            echo "Quality check failed"
+            exit 1
+          fi
+          if [[ "${{ needs.test.result }}" != "success" ]]; then
+            echo "Test failed"
+            exit 1
+          fi
+          if [[ "${{ needs.build.result }}" != "success" ]]; then
+            echo "Build failed"
+            exit 1
+          fi
+          echo "All CI checks passed successfully!"

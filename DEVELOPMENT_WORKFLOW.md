@@ -64,14 +64,12 @@ This document summarizes the complete development workflow that has been configu
 
 ### 5. Package.json Scripts Integration
 - **Updated scripts**:
-  - `lint`: Uses Biome instead of ESLint
-  - `format`: Uses Biome instead of Prettier
-  - `biome:check`: Run Biome linting
-  - `biome:fix`: Fix Biome issues
-  - `biome:format`: Format with Biome
+  - `lint`: Run Biome linting checks
+  - `lint:fix`: Fix Biome linting issues
+  - `format`: Format code with Biome
   - `type-check`: TypeScript validation
   - `quality`: Combined type checking and linting
-  - `quality:fix`: Fix formatting and run type check
+  - `quality:fix`: Fix linting issues and run type check
 
 ## 🔧 Configuration Files Created/Modified
 

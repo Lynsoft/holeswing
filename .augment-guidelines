@@ -1,0 +1,494 @@
+# Augment Project Guidelines - LynSoft Golf Field Expo React Native App
+
+## 🎯 Communication & Response Guidelines
+
+### Response Style
+- Provide step-by-step explanations for complex mobile implementations
+- For TypeScript code, explain interfaces, types, and architectural decisions
+- Include reasoning behind React Native/Expo technology choices and patterns
+- Use code examples with inline comments for clarity
+- Break down large tasks into smaller, manageable steps
+- Consider mobile-specific constraints (performance, battery, network)
+
+### Code Explanations
+- Always explain what TypeScript interfaces and types are doing
+- Describe the purpose of each major code block
+- Highlight mobile security considerations and best practices
+- Explain performance implications for mobile devices
+- Include accessibility considerations for mobile UI components
+- Address platform differences (iOS vs Android) when relevant
+
+### Communication Preferences
+- Use clear, actionable language with specific mobile examples
+- Prioritize practical mobile implementation over theoretical concepts
+- Provide both the "what" and "why" for technical decisions
+- Include troubleshooting tips for common mobile development issues
+- Reference existing patterns in the React Native codebase when applicable
+- Consider mobile UX patterns and platform conventions
+
+## 🎯 Core Project Rules
+
+### Technology Stack (NEVER CHANGE)
+- **Expo SDK ~53.0.13** with Expo Router for file-based routing
+- **React 19.0.0** with functional components and hooks
+- **React Native 0.79.4** for cross-platform mobile development
+- **TypeScript 5.8.3** in strict mode (all types required)
+- **NativeWind (latest)** for Tailwind CSS styling in React Native
+- **Biome 2.0.6** for linting and formatting (no ESLint)
+- **pnpm** for package management (NEVER use npm/yarn/bun)
+
+### File Naming Conventions
+- **Screens**: Always `index.tsx` or specific route names in Expo Router directories
+- **Layouts**: Always `_layout.tsx` in Expo Router directories
+- **Components**: PascalCase (e.g., `UserProfile.tsx`, `GolfScoreCard.tsx`)
+- **Directories**: kebab-case for features (e.g., `golf-course/`, `score-tracking/`)
+- **Hooks**: camelCase with `use` prefix (e.g., `useGolfScore.ts`, `useLocation.ts`)
+- **Types**: PascalCase interfaces (e.g., `GolfCourseProps`, `ScoreData`)
+- **Utils**: camelCase (e.g., `golfCalculations.ts`, `dateHelpers.ts`)
+
+### Directory Structure Rules
+```
+app/                        # Expo Router - all screens and layouts
+├── (drawer)/              # Drawer navigation group
+├── (tabs)/                # Tab navigation group
+├── _layout.tsx            # Root layout
+├── +html.tsx              # Web-specific HTML template
+└── +not-found.tsx         # 404 screen
+components/                 # Reusable UI components
+├── ui/                    # Basic UI components (Button, Input, etc.)
+├── features/              # Feature-specific components
+└── forms/                 # Form components
+store/                     # Zustand state management
+utils/                     # Utility functions and helpers
+types/                     # TypeScript type definitions
+assets/                    # Static assets (images, fonts, etc.)
+```
+
+### Import Patterns (ALWAYS FOLLOW)
+- Use `~/` alias for root imports: `import { Button } from '~/components/ui/Button'`
+- Group imports: React/React Native first, then Expo, then libraries, then local imports
+- Use default exports for screens and layouts
+- Use named exports for components, hooks, and utilities
+- Import React Native components explicitly: `import { View, Text } from 'react-native'`
+
+## 🏗️ Component Architecture Rules
+
+### React Native Component Patterns
+- **Default**: All components are functional components with hooks
+- **Rule**: Use functional components with TypeScript interfaces
+- **Pattern**: Keep components focused and reusable across platforms
+
+### Component Structure Template
+```typescript
+// Basic React Native Component
+import { View, Text } from 'react-native'
+
+interface ComponentProps {
+  title: string
+  onPress?: () => void
+}
+
+export default function ComponentName({ title, onPress }: ComponentProps) {
+  return (
+    <View className="p-4">
+      <Text className="text-lg">{title}</Text>
+    </View>
+  )
+}
+
+// Interactive Component with Hooks
+import { useState } from 'react'
+import { TouchableOpacity, Text } from 'react-native'
+
+export default function InteractiveComponent() {
+  const [pressed, setPressed] = useState(false)
+
+  return (
+    <TouchableOpacity onPress={() => setPressed(!pressed)}>
+      <Text className="text-blue-500">{pressed ? 'Pressed' : 'Press me'}</Text>
+    </TouchableOpacity>
+  )
+}
+```
+
+### Props Interface Rules
+- Always define TypeScript interfaces for component props
+- Use descriptive names: `ButtonProps`, `GolfScoreCardProps`, `CourseData`
+- Make optional props explicit with `?`
+- Include children type when needed: `children: React.ReactNode`
+- Use React Native specific types: `ViewStyle`, `TextStyle`, `ImageStyle`
+
+## 🎨 Styling Rules (STRICT)
+
+### NativeWind (Tailwind for React Native) Patterns
+- **Global Styles**: Only modify `global.css` for Tailwind imports
+- **Import Syntax**: Use standard Tailwind imports: `@tailwind base; @tailwind components; @tailwind utilities;`
+- **Theme Config**: Configure in `tailwind.config.js` with NativeWind preset
+- **Platform Styles**: Use platform-specific styling when needed
+
+### Styling Implementation
+- **Primary**: Use NativeWind className prop for Tailwind CSS classes
+- **Secondary**: Use StyleSheet.create() for complex platform-specific styles
+- **Avoid**: Inline styles except for dynamic values
+- **Pattern**: Combine NativeWind with React Native StyleSheet when necessary
+
+### Component Styling Rules
+- Use NativeWind classes directly in components: `className="bg-blue-500 p-4"`
+- Create style objects for complex styling: `const styles = StyleSheet.create({})`
+- Follow mobile-first responsive patterns
+- Consider platform differences (iOS vs Android styling)
+
+## 📁 Code Organization Rules
+
+### Screen Structure (MANDATORY)
+```typescript
+// app/[route]/index.tsx
+import { View, Text } from 'react-native'
+import { Container } from '~/components/Container'
+
+export default function ScreenName() {
+  return (
+    <Container>
+      <View className="flex-1 justify-center items-center p-4">
+        <Text className="text-xl font-bold">Screen Content</Text>
+      </View>
+    </Container>
+  )
+}
+```
+
+### Layout Structure (MANDATORY)
+```typescript
+// app/[route]/_layout.tsx
+import { Stack } from 'expo-router'
+
+export default function LayoutName() {
+  return (
+    <Stack>
+      <Stack.Screen
+        name="index"
+        options={{
+          title: "Screen Title",
+          headerShown: true
+        }}
+      />
+    </Stack>
+  )
+}
+```
+
+### Navigation Structure (MANDATORY)
+```typescript
+// app/(tabs)/_layout.tsx
+import { Tabs } from 'expo-router'
+import { TabBarIcon } from '~/components/TabBarIcon'
+
+export default function TabLayout() {
+  return (
+    <Tabs screenOptions={{ tabBarActiveTintColor: 'blue' }}>
+      <Tabs.Screen
+        name="index"
+        options={{
+          title: 'Home',
+          tabBarIcon: ({ color }) => <TabBarIcon name="home" color={color} />,
+        }}
+      />
+    </Tabs>
+  )
+}
+```
+
+## 🔧 Development Workflow Rules
+
+### Package Management (MANDATORY)
+- **ALWAYS** use pnpm commands for dependencies
+- **NEVER** use npm, yarn, or bun commands in this project
+- **NEVER** manually edit package.json
+- Use `pnpm add [package]` for dependencies
+- Use `pnpm add -D [package]` for dev dependencies
+- Run `pnpm run quality` after adding dependencies
+
+### Code Quality with Biome
+- **Linting**: `pnpm run lint` (check issues)
+- **Formatting**: `pnpm run format` (fix formatting)
+- **Type Checking**: `pnpm run type-check` (TypeScript validation)
+- **Quality Check**: `pnpm run quality` (type-check + lint)
+- **Quality Fix**: `pnpm run quality:fix` (format + type-check)
+
+### Mandatory Development Workflow (ALWAYS FOLLOW)
+After completing any feature development, refactoring, or bug fix:
+1. **Format**: `pnpm run format` (fix formatting with Biome)
+2. **Type Check**: `pnpm run type-check` (verify TypeScript compilation)
+3. **Lint**: `pnpm run lint` (check linting issues with Biome)
+4. **Rule**: Only proceed if ALL THREE commands complete successfully
+
+### Mobile Development Commands
+- **Start Development**: `pnpm start` (Expo development server)
+- **iOS Simulator**: `pnpm run ios` (run on iOS simulator)
+- **Android Emulator**: `pnpm run android` (run on Android emulator)
+- **Web Development**: `pnpm run web` (run on web browser)
+- **Build Development**: `pnpm run build:dev` (EAS development build)
+- **Build Production**: `pnpm run build:prod` (EAS production build)
+
+### Git Hooks with Husky (MANDATORY SETUP)
+- **Install Husky**: Already configured in package.json
+- **Pre-commit Hook**: Automatically runs lint-staged with Biome formatting
+- **Commit-msg Hook**: Enforces conventional commit message format
+- **Failure Handling**: Prevents commits if any quality gate fails
+- **Lint-staged**: Automatically formats and checks staged files
+
+### GitHub Actions CI/CD (MANDATORY SETUP)
+- **File Location**: `.github/workflows/ci.yml`
+- **Triggers**: Pull requests and pushes to main branch
+- **CI Steps**:
+  1. Install dependencies: `pnpm install`
+  2. Code quality: `pnpm run quality` (Biome linting and TypeScript)
+  3. Mobile builds: EAS build validation (when configured)
+  4. Tests: `pnpm run test` (when test suite is added)
+- **Package Manager**: Use pnpm with dependency caching
+- **Failure Policy**: CI fails if any step fails, preventing broken merges
+- **Consistency Rule**: CI workflow must match local Git hooks exactly
+
+## 📚 Required Libraries and Patterns (MANDATORY)
+
+### Type Safety with Zod
+- **Always** use Zod for runtime type validation
+- Define Zod schemas for API responses, form data, and external data
+- Use `z.infer<typeof Schema>` for TypeScript types
+- Validate all external data at runtime
+
+### State Management with Zustand
+- **Always** use Zustand for global state management
+- **Never** use Context API or Redux for global state
+- Create focused stores for specific domains
+- Use TypeScript interfaces for store state
+
+### Navigation with Expo Router
+- **Always** use Expo Router for file-based routing
+- Use typed routes with `expo-router/typed-routes`
+- Implement navigation groups with `(group)` syntax
+- Use Stack, Tabs, and Drawer navigators appropriately
+
+### Database Integration with Supabase
+- **Always** use Supabase for backend services
+- Configure with AsyncStorage for React Native persistence
+- Implement Row Level Security (RLS) for data protection
+- Use TypeScript types generated from Supabase schema
+
+### Icons with Expo Vector Icons
+- **Always** use `@expo/vector-icons` for consistent iconography
+- Choose appropriate icon families (Ionicons, MaterialIcons, etc.)
+- Maintain consistent icon sizing and styling
+- Use platform-specific icons when needed
+
+## 🚫 Template Constraints (DO NOT MODIFY)
+
+### Protected Files
+- `package.json` - Use pnpm commands only (never npm/yarn/bun)
+- `tsconfig.json` - Maintain existing configuration
+- `app.json` - Expo configuration file
+- `eas.json` - EAS Build configuration
+- `biome.json` - Maintain Biome configuration
+- `tailwind.config.js` - Keep NativeWind configuration
+- `metro.config.js` - Metro bundler configuration
+- `babel.config.js` - Babel configuration for Expo
+- `pnpm-lock.yaml` - Never edit manually, managed by pnpm
+- `.husky/` - Git hooks directory, managed by Husky
+- `.github/workflows/` - CI/CD pipeline configurations
+
+### Protected Patterns
+- Expo Router structure in `app/`
+- NativeWind configuration and setup
+- TypeScript strict mode settings
+- Import alias configuration (`~/` for root)
+- Expo SDK and React Native version compatibility
+
+### Required Patterns to Follow
+- Use Expo Image for optimized image handling
+- Use Expo Font for custom font loading
+- Maintain platform-specific code organization
+- Follow React Native performance best practices
+- Use Expo development build for testing
+
+## 💡 Quick Decision Rules
+
+### When to Use Client Components
+- ✅ User interactions (onClick, onChange)
+- ✅ React hooks (useState, useEffect)
+- ✅ Browser APIs (localStorage, window)
+- ❌ Static content display
+- ❌ SEO-critical content
+- ❌ Data fetching (use Server Components)
+
+### When to Create New Directories
+- ✅ New feature areas (e.g., `app/dashboard/`)
+- ✅ Component categories (e.g., `components/forms/`)
+- ❌ Single-use components
+- ❌ Utility functions (use `utils/`)
+
+### When to Modify Global Styles
+- ✅ Adding new CSS variables for theming
+- ✅ Extending dark mode support
+- ✅ Adding custom font configurations
+- ❌ Component-specific styles
+- ❌ Layout-specific styles
+- ❌ Changing Tailwind import syntax
+
+## 🎯 Augment-Specific Guidelines
+
+### Always Ask For
+- Existing patterns before creating new components
+- File structure before adding new features
+- TypeScript types for all new code
+- Responsive design considerations
+- Accessibility requirements
+
+### Never Assume
+- Component should be client-side (default to server)
+- Custom CSS is needed (use Tailwind first)
+- New dependencies are required (check existing solutions)
+- File structure can be changed (follow established patterns)
+
+### Default Responses
+- "Following the Expo Router pattern..."
+- "Using functional component with hooks..."
+- "Installing with pnpm add [package]..."
+- "Adding Zod schema for type validation..."
+- "Creating Zustand store for state management..."
+- "Using Expo Vector Icons for iconography..."
+- "Configuring NativeWind for styling..."
+- "Setting up Husky for Git hooks..."
+- "Creating GitHub Actions CI/CD pipeline..."
+- "Running pnpm run format && pnpm run type-check && pnpm run lint..."
+
+## 🎯 Implementation Patterns (MANDATORY)
+
+### Adding Dependencies
+```bash
+pnpm add [package]           # Runtime dependency
+pnpm add -D [package]        # Development dependency
+pnpm remove [package]        # Remove dependency
+```
+
+### Zod Schema Pattern
+```typescript
+import { z } from 'zod'
+
+const UserSchema = z.object({
+  id: z.string(),
+  name: z.string(),
+  email: z.string().email(),
+})
+
+type User = z.infer<typeof UserSchema>
+```
+
+### Zustand Store Pattern
+```typescript
+import { create } from 'zustand'
+
+interface UserStore {
+  user: User | null
+  setUser: (user: User) => void
+}
+
+export const useUserStore = create<UserStore>((set) => ({
+  user: null,
+  setUser: (user) => set({ user }),
+}))
+```
+
+### Expo Vector Icons Pattern
+```typescript
+import { Ionicons } from '@expo/vector-icons'
+import { TouchableOpacity } from 'react-native'
+
+export function IconButton({ name, onPress, color = 'black', size = 24 }) {
+  return (
+    <TouchableOpacity onPress={onPress}>
+      <Ionicons name={name} size={size} color={color} />
+    </TouchableOpacity>
+  )
+}
+```
+
+### Expo Router Navigation Pattern
+```typescript
+import { router } from 'expo-router'
+import { TouchableOpacity, Text } from 'react-native'
+
+export function NavigationButton({ href, title }) {
+  return (
+    <TouchableOpacity onPress={() => router.push(href)}>
+      <Text className="text-blue-500">{title}</Text>
+    </TouchableOpacity>
+  )
+}
+```
+
+### Supabase Integration Pattern
+```typescript
+import { supabase } from '~/utils/supabase'
+import { useEffect, useState } from 'react'
+
+export function useAuth() {
+  const [user, setUser] = useState(null)
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user ?? null)
+    })
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
+        setUser(session?.user ?? null)
+      }
+    )
+
+    return () => subscription.unsubscribe()
+  }, [])
+
+  return { user }
+}
+```
+
+### Husky Git Hooks Setup Pattern
+```bash
+# Install Husky
+pnpm add -D husky
+
+# Initialize Husky
+pnpm exec husky init
+
+# Pre-commit hook (.husky/pre-commit)
+pnpm run format && pnpm run type-check && pnpm run lint
+
+# Commit-msg hook (.husky/commit-msg)
+npx --no -- commitlint --edit $1
+```
+
+### GitHub Actions CI Pattern
+```yaml
+# .github/workflows/ci.yml
+name: CI
+on: [push, pull_request]
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v2
+        with:
+          version: latest
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+      - run: pnpm install
+      - run: pnpm run quality
+      - run: pnpm run build:dev
+```
+
+---
+
+**Memory Key**: LynSoft Expo React Native + Expo Router + React 19 + NativeWind + TypeScript Strict + Biome + pnpm + Zod + Zustand + Expo Vector Icons + Supabase + Husky + GitHub Actions + MANDATORY WORKFLOW
