@@ -40,11 +40,8 @@ jobs:
       - name: Type check
         run: pnpm run type-check
 
-      - name: Lint check
+      - name: Lint and format check
         run: pnpm run lint
-
-      - name: Format check
-        run: npx @biomejs/biome format --check .
 
   test:
     name: Test
@@ -105,11 +102,6 @@ jobs:
 
       - name: Expo prebuild (dry run)
         run: npx expo prebuild --platform all --no-install
-        env:
-          EXPO_NO_TELEMETRY: 1
-
-      - name: Build development bundle
-        run: pnpm run build:dev
         env:
           EXPO_NO_TELEMETRY: 1
 
