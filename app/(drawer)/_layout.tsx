@@ -32,6 +32,16 @@ const DrawerLayout = () => {
           ),
         }}
       />
+      <Drawer.Screen
+        name="examples"
+        options={{
+          headerTitle: 'Design System Examples',
+          drawerLabel: 'Design System',
+          drawerIcon: ({ size, color }) => (
+            <MaterialIcons name="palette" size={size} color={color} />
+          ),
+        }}
+      />
     </Drawer>
   )
 }
