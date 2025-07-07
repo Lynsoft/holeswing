@@ -43,7 +43,7 @@
     "@react-navigation/native": "^7.0.3",
     "@supabase/supabase-js": "^2.38.4",
     "expo": "~53.0.13",
-    "expo-constants": "~17.1.4",
+    "expo-constants": "~17.1.7",
     "expo-dev-client": "~5.2.2",
     "expo-dev-launcher": "^5.0.17",
     "expo-linking": "~7.1.4",
